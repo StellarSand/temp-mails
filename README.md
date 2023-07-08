@@ -1,5 +1,7 @@
 # temp-mails
-A list of many disposable and temporary email address domains
+A list of many disposable and temporary email address domains.
+
+As of July 9, 2023, the final list has 156782 domains.
 
 
 

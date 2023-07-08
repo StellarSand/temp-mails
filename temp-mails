@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+
+
+import requests
+from bs4 import BeautifulSoup
+
+
+def get_url_response(url):
+    try:
+        return requests.get(url)
+    except requests.exceptions as exception:
+        print(f"Failed to connect to {url}: {exception}\nExiting script.\n")
+        exit()
+
+
+def scrape_mailcheck_site(div):
+    domains_list = []
+    
+    # Extract domain names
+    for tag in div.find_all("a"):
+        href = tag.get("href")
+        if href and f"{base_mailcheck_url}/domain" in href:
+            domain = href.split("/")[-1]
+            domains_list.append(domain)
+
+    return domains_list
+
+
+url1 = "https://raw.githubusercontent.com/7c/fakefilter/main/txt/data.txt"
+url2 = "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/master/disposable_email_blocklist.conf"
+url3 = "https://raw.githubusercontent.com/wesbos/burner-email-providers/master/emails.txt"
+url4 = "https://raw.githubusercontent.com/stopforumspam/disposable_email_domains/master/blacklist.txt"
+url5 = "https://raw.githubusercontent.com/FGRibreau/mailchecker/master/list.txt"
+base_mailcheck_url = "https://www.mailcheck.ai"
+extras_file = "extras.txt"
+output_file = "final_list.txt"
+
+print(f"\n[+] Retrieving data from https://github.com/7c/fakefilter\n")
+response1 = get_url_response(url1)
+
+print(f"[+] Retrieving data from https://github.com/disposable-email-domains/disposable-email-domains\n")
+response2 = get_url_response(url2)
+
+print(f"[+] Retrieving data from https://github.com/wesbos/burner-email-providers\n")
+response3 = get_url_response(url3)
+
+print(f"[+] Retrieving data from https://github.com/stopforumspam/disposable_email_domains\n")
+response4 = get_url_response(url4)
+
+print(f"[+] Retrieving data from https://github.com/FGRibreau/mailchecker\n")
+response5 = get_url_response(url5)
+
+print(f"[+] Retrieving data from extras.txt\n")
+with open(extras_file, "r") as extras:
+    data6 = extras.read().splitlines()
+
+print(f"[+] Retrieving data from {base_mailcheck_url}")
+print(f"This will definitely take some time ...")
+data7 = []
+# Iterate from a-z and 0-9
+for char in list(map(chr, range(ord("a"), ord("z") + 1))) + list(map(str, range(10))):
+    print(f"  > Checking domains with \"{char}\"")
+    page_number = 1
+    while True:
+        url6 = f"{base_mailcheck_url}/directory/{char}?page={page_number}"
+        soup = BeautifulSoup(requests.get(url6).text, "html.parser")
+        div = soup.find("div", class_="grid gap-10 mt-6 lg:grid-cols-5 md:grid-col-3 sm:grid-cols-2")
+        if div and div.find("a"):
+            print(f"    Page {page_number}")
+            data7.extend(scrape_mailcheck_site(div))
+            page_number += 1
+        else:
+            break
+
+
+# Remove empty lines & lines starting with "#"
+print(f"\n>> Combining data ...\n")
+response_data1 = response1.text.splitlines()
+response_data2 = response2.text.splitlines()
+response_data3 = response3.text.splitlines()
+response_data4 = response4.text.splitlines()
+response_data5 = response5.text.splitlines()
+data1 = [line for line in response_data1 if line.strip() and not line.startswith("#")]
+data2 = [line for line in response_data2 if line.strip()]
+data3 = [line for line in response_data3 if line.strip()]
+data4 = [line for line in response_data4 if line.strip() and not line.startswith("#")]
+data5 = [line for line in response_data5 if line.strip()]
+
+combined_data = data1 + data2 + data3 + data4 + data5 + data6 + data7
+print(f">> Removing duplicates ...\n")
+combined_data = list(set(combined_data))
+print(f">> Sorting list ...\n")
+combined_data.sort()
+
+with open(output_file, "w") as file:
+    print(f">> Writing output to {output_file} ...\n")
+    for item in combined_data:
+        file.write(f"{item}\n")
+    print("Done.\n")
+

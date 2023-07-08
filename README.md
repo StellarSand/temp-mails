@@ -1,15 +1,29 @@
 # temp-mails
-A list of disposable and temporary email address domains
+A list of many disposable and temporary email address domains
 
 
 
 ## Contents
+- [How does it work?](#how-does-it-work)
 - [Supported OS](#supported-os)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+
+
+
+## How does it work?
+This script retrieves data from multiple sources, combines them, removes duplicates and sorts it to create a final list.
+
+#### Data sources
+- [FakeFilter](https://github.com/7c/fakefilter)
+- [disposable-email-domains](https://github.com/disposable-email-domains/disposable-email-domains)
+- [burner-email-providers](https://github.com/wesbos/burner-email-providers)
+- [disposable_email_domains](https://github.com/stopforumspam/disposable_email_domains)
+- [MailChecker](https://github.com/FGRibreau/mailchecker)
+- [MailCheck.ai](https://www.mailcheck.ai)
+- [Some extra domains](https://github.com/the-weird-aquarian/temp-mails/blob/main/extras.txt)
 
 
 
@@ -27,7 +41,11 @@ A list of disposable and temporary email address domains
 
 
 
-## Installation
+## Usage
+A [final list](https://github.com/the-weird-aquarian/temp-mails/blob/main/final_list.txt) is already included which can be used directly.
+
+To obtain a more updated data, follow these steps:
+
 **1. Clone this repo:**
 ```
 git clone https://github.com/the-weird-aquarian/temp-mails.git
@@ -43,9 +61,7 @@ cd temp-mails
 chmod +x temp-mails
 ```
 
-
-
-## Usage
+**4. Run the script:**
 ```
 python3 temp-mails
 ```

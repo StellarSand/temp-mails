@@ -23,12 +23,30 @@
 
 import requests
 from bs4 import BeautifulSoup
+from random import randint
+import time
 
 
 def get_url_response(url):
+    connection_timeout = 10
+    data_read_timeout = 20
+    # If required, check headers from https://myhttpheader.com/ or https://httpbin.org/headers
+    # This should help to avoid some of scraping detection by pretending to be real browser
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/115.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Connection": "keep-alive",
+        "Cache-Control": "no-cache",
+        "DNT": "1",
+        "Pragma": "no-cache",
+        "Upgrade-Insecure-Requests": "1",
+        "X-Requested-With": "XMLHttpRequest"
+        }
+
     try:
-        return requests.get(url)
-    except requests.exceptions as exception:
+        return requests.get(url, timeout=(connection_timeout, data_read_timeout), headers=headers)
+    except requests.exceptions.RequestException as exception:
         print(f"Failed to connect to {url}: {exception}\nExiting script.\n")
         exit()
 
@@ -62,23 +80,36 @@ github_display_urls = [
     "https://github.com/FGRibreau/mailchecker"
     ]
 
+# Exclude Anonaddy & SimpleLogin domains
+allowed_domains = [
+    "aleeas.com",
+    "anonaddy.com",
+    "anonaddy.me",
+    "silomails.com",
+    "simplelogin.co",
+    "simplelogin.fr",
+    "simplelogin.io",
+    "slmail.me",
+    "slmails.com"
+    ]
+
 base_mailcheck_url = "https://www.mailcheck.ai"
 extras_file = "extras.txt"
 output_file = "final_list.txt"
 
 github_response_data = []
 print("")
-for data_url, display_url in zip(github_data_urls, github_display_urls):
+for display_url, data_url in zip(github_display_urls, github_data_urls):
     print(f"[+] Retrieving data from {display_url}\n")
     response = get_url_response(data_url)
-    github_response_data.append(response.text.splitlines())
+    github_response_data.extend(response.text.splitlines())
 
 print(f"[+] Retrieving data from extras.txt\n")
 with open(extras_file, "r") as extras:
     extras_data = extras.read().splitlines()
 
 print(f"[+] Retrieving data from {base_mailcheck_url}")
-print(f"This will definitely take some time ...")
+print(f"Sit back & relax. This will definitely take some time ...")
 mailcheck_data = []
 # Iterate from a-z and 0-9
 for char in list(map(chr, range(ord("a"), ord("z") + 1))) + list(map(str, range(10))):
@@ -92,24 +123,26 @@ for char in list(map(chr, range(ord("a"), ord("z") + 1))) + list(map(str, range(
             print(f"    Page {page_number}")
             mailcheck_data.extend(scrape_mailcheck_site(div))
             page_number += 1
+            delay = randint(3, 10) # Generate a random delay between 3 and 10 seconds
+            print(f"    --- Pausing for {delay} seconds ---")
+            time.sleep(delay) # This should help to avoid some of scraping detection by the website
         else:
             break
 
 print(f"\n>> Combining data ...\n")
 combined_data = []
-for github_response_data_lines in github_response_data:
+for line in github_response_data:
     # Remove empty lines & lines starting with "#"
-    combined_data.extend([line for line in github_response_data_lines if line.strip() and not line.startswith("#")])
+    if line.strip() and not line.startswith("#"):
+        combined_data.append(line)
 
 combined_data.extend(extras_data)
 combined_data.extend(mailcheck_data)
-print(f">> Removing duplicates ...\n")
-combined_data = list(set(combined_data))
-print(f">> Sorting list ...\n")
+combined_data = list(set(combined_data)) # Remove duplicates
 combined_data.sort()
 
 with open(output_file, "w") as file:
-    print(f">> Writing output to {output_file} ...\n")
     for item in combined_data:
-        file.write(f"{item}\n")
-    print("Done.\n")
+        if item not in allowed_domains:
+            file.write(f"{item}\n")
+    print(f">> Output written to {output_file}.\n")

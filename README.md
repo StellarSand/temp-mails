@@ -68,6 +68,8 @@ chmod +x temp-mails
 python3 temp-mails
 ```
 
+NOTE: Due to large dataset while retrieving data from [MailCheck.ai](https://www.mailcheck.ai), the script will intentionally pause frequently to avoid scraping detection.
+
 
 
 ## Contributing

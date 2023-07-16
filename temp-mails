@@ -86,7 +86,7 @@ for char in list(map(chr, range(ord("a"), ord("z") + 1))) + list(map(str, range(
     page_number = 1
     while True:
         mailcheck_url = f"{base_mailcheck_url}/directory/{char}?page={page_number}"
-        soup = BeautifulSoup(requests.get(mailcheck_url).text, "html.parser")
+        soup = BeautifulSoup(get_url_response(mailcheck_url).text, "html.parser")
         div = soup.find("div", class_="grid gap-10 mt-6 lg:grid-cols-5 md:grid-col-3 sm:grid-cols-2")
         if div and div.find("a"):
             print(f"    Page {page_number}")
@@ -96,12 +96,13 @@ for char in list(map(chr, range(ord("a"), ord("z") + 1))) + list(map(str, range(
             break
 
 print(f"\n>> Combining data ...\n")
-github_data = []
+combined_data = []
 for github_response_data_lines in github_response_data:
     # Remove empty lines & lines starting with "#"
-    github_data.append([line for line in github_response_data_lines if line.strip() and not line.startswith("#")])
+    combined_data.extend([line for line in github_response_data_lines if line.strip() and not line.startswith("#")])
 
-combined_data = github_data + extras_data + mailcheck_data
+combined_data.extend(extras_data)
+combined_data.extend(mailcheck_data)
 print(f">> Removing duplicates ...\n")
 combined_data = list(set(combined_data))
 print(f">> Sorting list ...\n")

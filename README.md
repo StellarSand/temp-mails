@@ -1,7 +1,7 @@
 # temp-mails
 A list of many disposable and temporary email address domains.
 
-As of July 9, 2023, the final list has 156782 domains.
+As of July 16, 2023, the [final list](https://github.com/the-weird-aquarian/temp-mails/blob/main/final_list.txt) has 156919 domains.
 
 
 

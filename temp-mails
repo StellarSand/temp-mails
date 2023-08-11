@@ -82,6 +82,7 @@ github_display_urls = [
 
 # Exclude Anonaddy & SimpleLogin domains
 allowed_domains = [
+    "addy.io",
     "aleeas.com",
     "anonaddy.com",
     "anonaddy.me",

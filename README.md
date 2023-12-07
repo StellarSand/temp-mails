@@ -1,7 +1,7 @@
 # temp-mails
 A list of many disposable and temporary email address domains.
 
-As of Aug 11, 2023, the [final list](https://github.com/the-weird-aquarian/temp-mails/blob/main/final_list.txt) has 157461 domains.
+As of `Nov 07, 2023`, the [final list](https://github.com/StellarSand/temp-mails/blob/main/final_list.txt) has `162188` domains.
 
 
 
@@ -25,7 +25,7 @@ This script retrieves data from multiple sources, combines them, removes duplica
 - [disposable_email_domains](https://github.com/stopforumspam/disposable_email_domains)
 - [MailChecker](https://github.com/FGRibreau/mailchecker)
 - [MailCheck.ai](https://www.mailcheck.ai)
-- [Some extra domains](https://github.com/the-weird-aquarian/temp-mails/blob/main/extras.txt)
+- [Some extra domains](https://github.com/StellarSand/temp-mails/blob/main/extras.txt)
 
 
 
@@ -44,13 +44,13 @@ This script retrieves data from multiple sources, combines them, removes duplica
 
 
 ## Usage
-A [final list](https://github.com/the-weird-aquarian/temp-mails/blob/main/final_list.txt) is already included which can be used directly.
+A [final list](https://github.com/StellarSand/temp-mails/blob/main/final_list.txt) is already included which can be used directly.
 
 To obtain a more updated data, follow these steps:
 
 **1. Clone this repo:**
 ```
-git clone https://github.com/the-weird-aquarian/temp-mails.git
+git clone https://github.com/StellarSand/temp-mails.git
 ```
 
 **2. Move into the project directory:**
@@ -68,13 +68,13 @@ chmod +x temp-mails
 python3 temp-mails
 ```
 
-NOTE: Due to large dataset while retrieving data from [MailCheck.ai](https://www.mailcheck.ai), the script will intentionally pause frequently to avoid scraping detection.
+*NOTE:* Due to large dataset while retrieving data from [MailCheck.ai](https://www.mailcheck.ai), the script will intentionally pause frequently to avoid scraping detection.
 
 
 
 ## Contributing
-Pull requests can be submitted [here](https://github.com/the-weird-aquarian/temp-mails/pulls).
+Pull requests can be submitted [here](https://github.com/StellarSand/temp-mails/pulls).
 
 
 ## License
-This project is licensed under the terms of [MIT license](https://github.com/the-weird-aquarian/temp-mails/blob/main/LICENSE).
+This project is licensed under the terms of [MIT license](https://github.com/StellarSand/temp-mails/blob/main/LICENSE).
